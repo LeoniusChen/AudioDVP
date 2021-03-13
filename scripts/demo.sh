@@ -1,4 +1,4 @@
-set -ex
+set -ex  # 显示执行的命令
 
 # set data path
 video_dir="data/video"
@@ -14,23 +14,23 @@ start_time="00:00:00"
 end_time="240"
 
 
-# extract video frames and audio
-# /usr/bin/ffmpeg -hide_banner -y -i $video_dir/*.mp4 -ss $start_time -t $end_time -r 25 $video_dir/full/%05d.png
-# /usr/bin/ffmpeg -hide_banner -y -i $video_dir/*.mp4 -ss $start_time -t $end_time $video_dir/audio/audio.aac
+## extract video frames and audio
+# /usr/bin/ffmpeg -hide_banner -y -i $video_dir/*.mp4 -ss $start_time -t $end_time -r 25 $video_dir/full/%05d.png  # 截取240s 并以每秒25帧拆分成图片
+# /usr/bin/ffmpeg -hide_banner -y -i $video_dir/*.mp4 -ss $start_time -t $end_time $video_dir/audio/audio.aac      # 输出音频
 
 
-# extract high-level feature from audio
+## extract high-level feature from audio
 # mkdir -p $video_dir/feature
-# python vendor/ATVGnet/code/test.py -i $video_dir/
+# python3 vendor/ATVGnet/code/test.py -i $video_dir/  # 利用AT-net提取说话人无关的特征表示 输入是MFCC
 
 
-# extract high-level feature from test audio
+## extract high-level feature from test audio
 # mkdir -p $audio_dir/feature
-# python vendor/ATVGnet/code/test.py -i $audio_dir/
+# python3 vendor/ATVGnet/code/test.py -i $audio_dir/  # 同样 提取test_audio的特征表示
 
 
-# # crop and resize video frames
-# python utils/crop_portrait.py \
+# # crop and resize video frames  裁剪并降采样原始图片
+# python3 utils/crop_portrait.py \
 #    --data_dir $video_dir \
 #    --crop_level 2.0 \
 #    --vertical_adjust 0.2
