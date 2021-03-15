@@ -1,5 +1,6 @@
 """
 Following https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/datasets/combine_A_and_B.py
+nfr: Neural Face Rendering
 """
 
 import os

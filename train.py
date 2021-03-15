@@ -11,7 +11,7 @@ from utils.visualizer import Visualizer
 if __name__ == '__main__':
     opt = Options().parse_args()   # get training options
 
-    dataset = create_dataset(opt)
+    dataset = create_dataset(opt)  # opt.dataset_mode 决定数据集的内容
 
     model = resnet_model.ResnetModel(opt)
 

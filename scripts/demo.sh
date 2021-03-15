@@ -36,7 +36,7 @@ end_time="240"
 #    --vertical_adjust 0.2
 
 
-# # # 3D face reconstruction
+# # # 3D face reconstruction 训练ResNet拟合expression coefficient
 # python train.py \
 #     --data_dir $video_dir \
 #     --num_epoch 20 \
@@ -46,11 +46,11 @@ end_time="240"
 #     --batch_size 5
 
 
-# build neural face renderer data pair
+# build neural face renderer data pair 生成用于渲染的CGAN中的 real/condition pairs
 # python utils/build_nfr_dataset.py --data_dir $video_dir
 
 
-# # # create reconstruction debug video
+# # # create reconstruction debug video  将初步生成的render+初步生成贴上背景的overlay+ground-truth整合到一个视频里做比较 
 # /usr/bin/ffmpeg -hide_banner -y -loglevel warning \
 #     -thread_queue_size 8192 -i $video_dir/render/%05d.png \
 #     -thread_queue_size 8192 -i $video_dir/crop/%05d.png \
@@ -59,7 +59,7 @@ end_time="240"
 #     -filter_complex hstack=inputs=3 -vcodec libx264 -preset slower -profile:v high -crf 18 -pix_fmt yuv420p $video_dir/debug.mp4
 
 
-# # # train audio2expression network
+# # # train audio2expression network  训练A2E网络
 # python train_exp.py \
 #     --dataset_mode audio_expression \
 #     --num_epoch 10 \
@@ -74,7 +74,7 @@ end_time="240"
 
 
 
-# # train neural face renderer
+# # train neural face renderer  训练CGAN
 # python vendor/neural-face-renderer/train.py 
 #     --dataroot $video_dir/nfr/AB --name nfr --model nfr --checkpoints_dir $video_dir/checkpoints \
 #     --netG unet_256 --direction BtoA --lambda_L1 100 --dataset_mode temporal --norm batch --pool_size 0 --use_refine \

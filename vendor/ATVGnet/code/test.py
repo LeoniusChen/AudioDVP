@@ -42,9 +42,9 @@ def test():
     input_audio = glob.glob(os.path.join(config.in_file, 'audio/*'))[0]
 
     speech, sr = librosa.load(input_audio, sr=16000, mono=True)
-    speech = np.insert(speech, 0, np.zeros(1920))
-    speech = np.append(speech, np.zeros(1920))
-    mfcc = python_speech_features.mfcc(speech,16000,winstep=0.01)
+    speech = np.insert(speech, 0, np.zeros(1920))  # 前面补0
+    speech = np.append(speech, np.zeros(1920))  # 后面补0
+    mfcc = python_speech_features.mfcc(speech,16000,winstep=0.01)  # 提取MFCC
 
     ind = 3
 
@@ -63,7 +63,7 @@ def test():
         features_lengh = (len(features) // 25) * 25
 
         for i in tqdm(range(features_lengh)):
-            torch.save(features[i][0].detach().cpu(), os.path.join(config.in_file, 'feature/%05d.pt' % (i+1)))
+            torch.save(features[i][0].detach().cpu(), os.path.join(config.in_file, 'feature/%05d.pt' % (i+1)))  # 与video提取的图片同时间维度
 
         print('feature length:',features_lengh)
 

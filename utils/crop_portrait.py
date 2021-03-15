@@ -22,7 +22,7 @@ def calc_bbox(image_list, batch_size=5):
             image = face_recognition.load_image_file(image_list[j])
             image_batch.append(image)
 
-        face_locations = face_recognition.batch_face_locations(image_batch, number_of_times_to_upsample=0, batch_size=batch_size)
+        face_locations = face_recognition.batch_face_locations(image_batch, number_of_times_to_upsample=0, batch_size=batch_size)  # [(top, right, bottom, left)]
 
         for face_location in face_locations:
             top, right, bottom, left = face_location[0]  # assuming only one face detected in the frame
@@ -31,30 +31,30 @@ def calc_bbox(image_list, batch_size=5):
             bottom_sum += bottom
             left_sum += left
 
-    return (top_sum // len(image_list), right_sum // len(image_list), bottom_sum // len(image_list), left_sum // len(image_list))
+    return (top_sum // len(image_list), right_sum // len(image_list), bottom_sum // len(image_list), left_sum // len(image_list))  # 获得整个数据集的人脸范围
 
 
 def crop_image(data_dir, dest_size, crop_level, vertical_adjust):
-    image_list = util.get_file_list(os.path.join(data_dir, 'full'))
-    top, right, bottom, left = calc_bbox(image_list)
+    image_list = util.get_file_list(os.path.join(data_dir, 'full'))  # 获取所有训练使用的图片
+    top, right, bottom, left = calc_bbox(image_list)  # bottom>top  right>left
 
     height = bottom - top
     width = right - left
 
-    crop_size = int(height * crop_level)
+    crop_size = int(height * crop_level)  # 放大裁剪范围
 
     horizontal_delta = (crop_size - width) // 2
     left -= horizontal_delta
-    right += horizontal_delta
+    right += horizontal_delta   # 水平方向扩大裁剪范围
 
-    top = int(top * vertical_adjust)
+    top = int(top * vertical_adjust)  # 调整top 向上提
     bottom = top + crop_size
 
     for i in tqdm(range(len(image_list))):
-        image =cv2.imread(image_list[i])
-        image = image[top:bottom, left:right]
+        image =cv2.imread(image_list[i])  # 读入完整的图片
+        image = image[top:bottom, left:right]  # 进行裁剪
 
-        image = cv2.resize(image, (dest_size, dest_size), interpolation=cv2.INTER_AREA)
+        image = cv2.resize(image, (dest_size, dest_size), interpolation=cv2.INTER_AREA)  # 降采样到 256*256
         cv2.imwrite(os.path.join(args.data_dir, 'crop', os.path.basename(image_list[i])), image)
 
 
